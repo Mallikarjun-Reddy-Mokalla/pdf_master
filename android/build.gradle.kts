@@ -39,20 +39,38 @@ subprojects {
     val configureAndroid = {
         val android = project.extensions.findByName("android")
         if (android != null) {
-            try {
-                val methods = android.javaClass.methods
-                val compileSdkMethod = methods.firstOrNull {
-                    (it.name == "compileSdkVersion" || it.name == "setCompileSdkVersion" || it.name == "setCompileSdk") &&
-                    it.parameterTypes.size == 1
-                }
-                if (compileSdkMethod != null) {
-                    if (compileSdkMethod.parameterTypes[0] == Int::class.javaPrimitiveType) {
-                        compileSdkMethod.invoke(android, 36)
-                    } else if (compileSdkMethod.parameterTypes[0] == Integer::class.java) {
-                        compileSdkMethod.invoke(android, Integer.valueOf(36))
+            var configured = false
+            // 1. Try int/Integer parameter first
+            for (m in android.javaClass.methods) {
+                if ((m.name == "compileSdkVersion" || m.name == "setCompileSdkVersion" || m.name == "setCompileSdk") && m.parameterTypes.size == 1) {
+                    if (m.parameterTypes[0] == Int::class.javaPrimitiveType || m.parameterTypes[0] == java.lang.Integer::class.java) {
+                        try {
+                            m.invoke(android, 36)
+                            configured = true
+                            println("[build.gradle.kts] Set compileSdk=36 for \${project.name} using \${m.name}(int)")
+                            break
+                        } catch (e: Throwable) {
+                            println("[build.gradle.kts] Failed \${m.name}(int) on \${project.name}: \${e.message}")
+                        }
                     }
                 }
-            } catch (_: Throwable) {
+            }
+            // 2. If not configured, try String parameter
+            if (!configured) {
+                for (m in android.javaClass.methods) {
+                    if ((m.name == "compileSdkVersion" || m.name == "setCompileSdkVersion" || m.name == "setCompileSdk") && m.parameterTypes.size == 1) {
+                        if (m.parameterTypes[0] == String::class.java) {
+                            try {
+                                m.invoke(android, "android-36")
+                                configured = true
+                                println("[build.gradle.kts] Set compileSdk=android-36 for \${project.name} using \${m.name}(String)")
+                                break
+                            } catch (e: Throwable) {
+                                println("[build.gradle.kts] Failed \${m.name}(String) on \${project.name}: \${e.message}")
+                            }
+                        }
+                    }
+                }
             }
         }
     }

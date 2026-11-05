@@ -6,6 +6,7 @@ import 'domain/repositories/document_repository.dart';
 import 'features/home/bloc/home_bloc.dart';
 import 'features/home/bloc/home_event.dart';
 import 'features/home/presentation/screens/main_shell_screen.dart';
+import 'features/splash/presentation/screens/splash_screen.dart';
 import 'services/file_service.dart';
 import 'services/pdf_service.dart';
 
@@ -43,7 +44,7 @@ class PdfMasterApp extends StatelessWidget {
           title: AppStrings.appName,
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
-          home: const MainShellScreen(),
+          home: const SplashScreen(),
         ),
       ),
     );

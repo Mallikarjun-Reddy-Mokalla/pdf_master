@@ -8,9 +8,23 @@ abstract class PdfProcessor {
   Future<String> splitPdf(String inputPath, List<int> pageNumbers, String outputPath);
   Future<String> compressPdf(String inputPath, String outputPath);
   Future<String> rotatePdf(String inputPath, Map<int, int> rotations, String outputPath);
+  Future<String> addWatermark(String inputPath, String watermarkText, String outputPath);
+  Future<String> protectPdf(String inputPath, String password, String outputPath);
+  Future<int> getPageCount(String inputPath);
 }
 
 class SyncfusionPdfProcessor implements PdfProcessor {
+  @override
+  Future<int> getPageCount(String inputPath) async {
+    final file = File(inputPath);
+    if (!await file.exists()) return 0;
+    final bytes = await file.readAsBytes();
+    final doc = PdfDocument(inputBytes: bytes);
+    final count = doc.pages.count;
+    doc.dispose();
+    return count;
+  }
+
   @override
   Future<String> imagesToPdf(List<String> imagePaths, String outputPath) async {
     final PdfDocument document = PdfDocument();
@@ -120,7 +134,6 @@ class SyncfusionPdfProcessor implements PdfProcessor {
     final PdfDocument document = PdfDocument(inputBytes: bytes);
 
     try {
-      // Configure compression options
       document.compressionLevel = PdfCompressionLevel.best;
       final List<int> outputBytes = await document.save();
       final outputFile = File(outputPath);
@@ -157,6 +170,70 @@ class SyncfusionPdfProcessor implements PdfProcessor {
           }
         }
       });
+
+      final List<int> outputBytes = await document.save();
+      final outputFile = File(outputPath);
+      await outputFile.writeAsBytes(outputBytes, flush: true);
+      return outputPath;
+    } finally {
+      document.dispose();
+    }
+  }
+
+  @override
+  Future<String> addWatermark(String inputPath, String watermarkText, String outputPath) async {
+    final inputFile = File(inputPath);
+    final bytes = await inputFile.readAsBytes();
+    final PdfDocument document = PdfDocument(inputBytes: bytes);
+
+    try {
+      final font = PdfStandardFont(PdfFontFamily.helvetica, 36, style: PdfFontStyle.bold);
+      final brush = PdfSolidBrush(PdfColor(180, 180, 180, 80));
+      final pen = PdfPen(PdfColor(180, 180, 180, 80), width: 1);
+
+      for (int i = 0; i < document.pages.count; i++) {
+        final PdfPage page = document.pages[i];
+        final Size size = page.getClientSize();
+        final Size textSize = font.measureString(watermarkText);
+
+        final PdfGraphicsState state = page.graphics.save();
+        page.graphics.translateTransform(size.width / 2, size.height / 2);
+        page.graphics.rotateTransform(-45);
+        page.graphics.drawString(
+          watermarkText,
+          font,
+          brush: brush,
+          pen: pen,
+          bounds: Rect.fromLTWH(
+            -textSize.width / 2,
+            -textSize.height / 2,
+            textSize.width,
+            textSize.height,
+          ),
+        );
+        page.graphics.restore(state);
+      }
+
+      final List<int> outputBytes = await document.save();
+      final outputFile = File(outputPath);
+      await outputFile.writeAsBytes(outputBytes, flush: true);
+      return outputPath;
+    } finally {
+      document.dispose();
+    }
+  }
+
+  @override
+  Future<String> protectPdf(String inputPath, String password, String outputPath) async {
+    final inputFile = File(inputPath);
+    final bytes = await inputFile.readAsBytes();
+    final PdfDocument document = PdfDocument(inputBytes: bytes);
+
+    try {
+      final PdfSecurity security = document.security;
+      security.userPassword = password;
+      security.ownerPassword = password;
+      security.algorithm = PdfEncryptionAlgorithm.aesx256Bit;
 
       final List<int> outputBytes = await document.save();
       final outputFile = File(outputPath);

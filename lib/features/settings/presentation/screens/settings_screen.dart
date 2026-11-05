@@ -205,25 +205,28 @@ class _SettingsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      decoration: BoxDecoration(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Material(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppDimens.radiusMedium),
-        border: Border.all(color: AppColors.cardBorder),
-      ),
-      child: ListTile(
-        leading: Icon(icon, color: AppColors.primary, size: 22),
-        title: Text(
-          title,
-          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radiusMedium),
+          side: const BorderSide(color: AppColors.cardBorder),
         ),
-        subtitle: subtitle != null
-            ? Text(subtitle!, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary))
-            : null,
-        trailing: trailing ??
-            (onTap != null ? const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted) : null),
-        onTap: onTap,
+        clipBehavior: Clip.antiAlias,
+        child: ListTile(
+          leading: Icon(icon, color: AppColors.primary, size: 22),
+          title: Text(
+            title,
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+          ),
+          subtitle: subtitle != null
+              ? Text(subtitle!, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary))
+              : null,
+          trailing: trailing ??
+              (onTap != null ? const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted) : null),
+          onTap: onTap,
+        ),
       ),
     );
   }

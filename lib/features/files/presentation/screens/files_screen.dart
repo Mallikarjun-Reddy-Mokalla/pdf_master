@@ -8,6 +8,7 @@ import 'package:pdf_master/domain/entities/document_entity.dart';
 import 'package:pdf_master/domain/repositories/document_repository.dart';
 import 'package:pdf_master/features/home/bloc/home_bloc.dart';
 import 'package:pdf_master/features/home/bloc/home_event.dart';
+import 'package:pdf_master/features/viewer/presentation/screens/pdf_viewer_screen.dart';
 import 'package:pdf_master/services/file_service.dart';
 import 'package:pdf_master/shared/dialogs/document_actions_dialog.dart';
 import 'package:pdf_master/shared/widgets/custom_app_bar.dart';
@@ -53,6 +54,18 @@ class _FilesScreenState extends State<FilesScreen> {
   }
 
   void _openDoc(DocumentEntity doc) async {
+    if (doc.fileType.toLowerCase() == 'pdf' || doc.filePath.toLowerCase().endsWith('.pdf')) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (ctx) => PdfViewerScreen(
+            filePath: doc.filePath,
+            title: doc.name,
+          ),
+        ),
+      );
+      return;
+    }
     final fileService = context.read<FileService>();
     final result = await fileService.openPdfFile(doc.filePath);
     if (!mounted) return;

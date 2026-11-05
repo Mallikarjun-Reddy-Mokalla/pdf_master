@@ -8,6 +8,7 @@ import 'package:pdf_master/domain/entities/document_entity.dart';
 import 'package:pdf_master/features/home/bloc/home_bloc.dart';
 import 'package:pdf_master/features/home/bloc/home_event.dart';
 import 'package:pdf_master/features/home/bloc/home_state.dart';
+import 'package:pdf_master/features/viewer/presentation/screens/pdf_viewer_screen.dart';
 import 'package:pdf_master/services/file_service.dart';
 import 'package:pdf_master/shared/dialogs/document_actions_dialog.dart';
 import 'package:pdf_master/shared/widgets/empty_state_view.dart';
@@ -103,6 +104,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _openDocument(BuildContext context, DocumentEntity doc) async {
+    if (doc.fileType.toLowerCase() == 'pdf' || doc.filePath.toLowerCase().endsWith('.pdf')) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (ctx) => PdfViewerScreen(
+            filePath: doc.filePath,
+            title: doc.name,
+          ),
+        ),
+      );
+      return;
+    }
     final fileService = context.read<FileService>();
     final messenger = ScaffoldMessenger.of(context);
     final result = await fileService.openPdfFile(doc.filePath);
