@@ -13,6 +13,9 @@ class FileUtils {
     return '${size.toStringAsFixed(decimals)} ${suffixes[clampedIndex]}';
   }
 
+  /// Alias for formatBytes
+  static String formatFileSize(int bytes, [int decimals = 1]) => formatBytes(bytes, decimals);
+
   /// Extracts file extension from file path or file name
   static String getFileExtension(String filePath) {
     if (!filePath.contains('.')) return '';

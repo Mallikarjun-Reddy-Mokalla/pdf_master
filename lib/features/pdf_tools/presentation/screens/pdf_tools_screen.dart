@@ -80,7 +80,7 @@ class _PdfToolsScreenState extends State<PdfToolsScreen> {
       name: title,
       filePath: filePath,
       fileType: 'pdf',
-      fileSizeBytes: size,
+      fileSize: size,
       pageCount: pageCount > 0 ? pageCount : 1,
       createdAt: now,
       updatedAt: now,
