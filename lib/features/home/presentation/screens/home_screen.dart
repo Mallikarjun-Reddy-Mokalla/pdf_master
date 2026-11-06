@@ -13,6 +13,7 @@ import 'package:pdf_master/services/file_service.dart';
 import 'package:pdf_master/shared/dialogs/document_actions_dialog.dart';
 import 'package:pdf_master/shared/widgets/empty_state_view.dart';
 import 'package:pdf_master/shared/widgets/file_card_tile.dart';
+import '../../../../shared/widgets/app_native_ad_card.dart';
 import '../widgets/home_search_bar.dart';
 import '../widgets/premium_banner_card.dart';
 import '../widgets/quick_action_card.dart';
@@ -411,6 +412,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                         ),
+                      ),
+                    ),
+
+                    // Native Ad Placement
+                    const SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: AppDimens.space16),
+                        child: AppNativeAdCard(),
                       ),
                     ),
 

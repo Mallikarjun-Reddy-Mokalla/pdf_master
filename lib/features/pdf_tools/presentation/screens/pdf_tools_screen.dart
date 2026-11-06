@@ -12,6 +12,7 @@ import '../../../../domain/repositories/document_repository.dart';
 import '../../../home/bloc/home_bloc.dart';
 import '../../../home/bloc/home_event.dart';
 import '../../../viewer/presentation/screens/pdf_viewer_screen.dart';
+import '../../../../services/ad_service.dart';
 import '../../../../services/file_service.dart';
 import '../../../../services/pdf_service.dart';
 import '../../../../shared/widgets/custom_app_bar.dart';
@@ -92,14 +93,20 @@ class _PdfToolsScreenState extends State<PdfToolsScreen> {
     if (!mounted) return;
     context.read<HomeBloc>().add(const LoadHomeData());
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (ctx) => PdfViewerScreen(
-          filePath: filePath,
-          title: title,
-        ),
-      ),
+    // Show Interstitial Ad (with cooldown) before opening newly created PDF
+    AdService.instance.showInterstitialAd(
+      onComplete: () {
+        if (!mounted) return;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (ctx) => PdfViewerScreen(
+              filePath: filePath,
+              title: title,
+            ),
+          ),
+        );
+      },
     );
   }
 

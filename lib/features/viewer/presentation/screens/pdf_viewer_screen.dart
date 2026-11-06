@@ -6,6 +6,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
+import '../../../../shared/widgets/app_banner_ad.dart';
 
 class PdfViewerScreen extends StatefulWidget {
   final String filePath;
@@ -182,50 +183,58 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
             ),
         ],
       ),
-      bottomNavigationBar: Container(
-        height: 52,
-        padding: const EdgeInsets.symmetric(horizontal: AppDimens.space16),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: AppColors.cardBorder)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      bottomNavigationBar: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            IconButton(
-              icon: const Icon(Icons.first_page_rounded, color: AppColors.primary),
-              tooltip: 'First Page',
-              onPressed: () => _pdfViewerController.firstPage(),
-            ),
-            IconButton(
-              icon: const Icon(Icons.navigate_before_rounded, color: AppColors.primary),
-              tooltip: 'Previous Page',
-              onPressed: () => _pdfViewerController.previousPage(),
-            ),
+            const AppBannerAd(),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.primaryLight,
-                borderRadius: BorderRadius.circular(16),
+              height: 52,
+              padding: const EdgeInsets.symmetric(horizontal: AppDimens.space16),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                border: Border(top: BorderSide(color: AppColors.cardBorder)),
               ),
-              child: Text(
-                '$_currentPage / ${_pageCount > 0 ? _pageCount : 1}',
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.primary,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.first_page_rounded, color: AppColors.primary),
+                    tooltip: 'First Page',
+                    onPressed: () => _pdfViewerController.firstPage(),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.navigate_before_rounded, color: AppColors.primary),
+                    tooltip: 'Previous Page',
+                    onPressed: () => _pdfViewerController.previousPage(),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryLight,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(
+                      '$_currentPage / ${_pageCount > 0 ? _pageCount : 1}',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.navigate_next_rounded, color: AppColors.primary),
+                    tooltip: 'Next Page',
+                    onPressed: () => _pdfViewerController.nextPage(),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.last_page_rounded, color: AppColors.primary),
+                    tooltip: 'Last Page',
+                    onPressed: () => _pdfViewerController.lastPage(),
+                  ),
+                ],
               ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.navigate_next_rounded, color: AppColors.primary),
-              tooltip: 'Next Page',
-              onPressed: () => _pdfViewerController.nextPage(),
-            ),
-            IconButton(
-              icon: const Icon(Icons.last_page_rounded, color: AppColors.primary),
-              tooltip: 'Last Page',
-              onPressed: () => _pdfViewerController.lastPage(),
             ),
           ],
         ),

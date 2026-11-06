@@ -4,6 +4,7 @@ import 'app.dart';
 import 'core/storage/app_storage_directory.dart';
 import 'data/database/app_database.dart';
 import 'data/repositories/document_repository_impl.dart';
+import 'services/ad_service.dart';
 import 'services/file_service.dart';
 import 'services/pdf_service.dart';
 
@@ -29,6 +30,9 @@ void main() async {
   final documentRepository = DocumentRepositoryImpl(dbProvider: databaseProvider);
   final fileService = FileService(repository: documentRepository);
   final pdfProcessor = SyncfusionPdfProcessor();
+
+  // Initialize Google Mobile Ads with live release ad units
+  await AdService.instance.initialize();
 
   runApp(
     PdfMasterApp(

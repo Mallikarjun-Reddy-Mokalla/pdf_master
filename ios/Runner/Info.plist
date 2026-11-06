@@ -30,6 +30,8 @@
 	<string>PDF Master uses your camera to scan physical documents and convert them into PDF files.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>PDF Master accesses selected photos to convert images into PDF documents.</string>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-3205766023147752~7389546525</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

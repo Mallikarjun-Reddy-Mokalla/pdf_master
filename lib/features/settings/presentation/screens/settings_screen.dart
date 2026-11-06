@@ -6,6 +6,7 @@ import 'package:pdf_master/core/constants/app_strings.dart';
 import 'package:pdf_master/core/storage/app_storage_directory.dart';
 import 'package:pdf_master/core/utils/file_utils.dart';
 import 'package:pdf_master/domain/repositories/document_repository.dart';
+import 'package:pdf_master/services/ad_service.dart';
 import 'package:pdf_master/shared/widgets/custom_app_bar.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -130,6 +131,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Pro subscription options available')),
+              );
+            },
+          ),
+          _SettingsTile(
+            icon: Icons.card_giftcard_rounded,
+            title: 'Free 24h Pro Pass',
+            subtitle: 'Watch a quick video ad to unlock Pro features for today',
+            onTap: () {
+              AdService.instance.showRewardedAd(
+                onUserEarnedReward: (reward) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('🎉 Congratulations! 24-hour Pro Pass unlocked!'),
+                      backgroundColor: AppColors.success,
+                    ),
+                  );
+                },
               );
             },
           ),

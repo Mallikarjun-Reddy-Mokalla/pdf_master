@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pdf_master/features/home/presentation/screens/main_shell_screen.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../services/ad_service.dart';
  
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -49,18 +50,23 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    // Navigate to MainShellScreen after 2.4 seconds
+    // Navigate to MainShellScreen after splash animation, showing App Open ad if available
     Timer(const Duration(milliseconds: 2400), () {
       if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 600),
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const MainShellScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-        ),
+      AdService.instance.showAppOpenAdIfAvailable(
+        onComplete: () {
+          if (!mounted) return;
+          Navigator.of(context).pushReplacement(
+            PageRouteBuilder(
+              transitionDuration: const Duration(milliseconds: 500),
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  const MainShellScreen(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
+          );
+        },
       );
     });
   }

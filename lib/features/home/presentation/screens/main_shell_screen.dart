@@ -5,6 +5,7 @@ import '../../../files/presentation/screens/files_screen.dart';
 import '../../../pdf_tools/presentation/screens/pdf_tools_screen.dart';
 import '../../../scanner/presentation/screens/scanner_screen.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
+import '../../../../shared/widgets/app_banner_ad.dart';
 import 'home_screen.dart';
 
 class MainShellScreen extends StatefulWidget {
@@ -44,12 +45,16 @@ class _MainShellScreenState extends State<MainShellScreen> {
         index: _currentIndex,
         children: screens,
       ),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: AppColors.divider, width: 1)),
-        ),
-        child: NavigationBar(
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const AppBannerAd(),
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border(top: BorderSide(color: AppColors.divider, width: 1)),
+            ),
+            child: NavigationBar(
           selectedIndex: _currentIndex,
           onDestinationSelected: _navigateToTab,
           backgroundColor: Colors.white,
@@ -84,7 +89,8 @@ class _MainShellScreenState extends State<MainShellScreen> {
           ],
         ),
       ),
-    );
+    ]),
+  );
   }
 }
 
